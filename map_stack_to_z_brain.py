@@ -12,7 +12,7 @@ import re
 import time
 
 
-ants_bin_path = "/usr/bin"
+ants_bin_path = "/Users/koester_lab/install/bin"
 ants_use_threads = 8
 
 
@@ -228,12 +228,12 @@ if __name__ == '__main__':
     #   time_averaged_filelist = ...
     #   data_folder_for_walk = ...
 
-    time_averaged_filelist = open(r'Time_Averaged_List.txt', 'a+')  # only first time; then 'a+'
-    reference_brain_path = Path(".")
+    time_averaged_filelist = open(r'/Volumes/User-Data/Armin/new_registration/Time_Averaged_List.txt', 'a+')  # only first time; then 'a+'
+    reference_brain_path = Path("/Volumes/User-Data/Armin")
 
-    for folder, subfolders, files in os.walk(r'.'):
+    for folder, subfolders, files in os.walk(r'/Volumes/User-Data/Armin/new_registration'):
         for file in files:
-            if re.search(r'fish.hdf5', file):  # only apply it to the time averaged files
+            if re.search(r'averaged.hdf5', file):  # only apply it to the time averaged files
 
                 filepath_time_averaged = Path(os.sep.join([folder, file]))
                 filestem = file.split('.')[-2]
@@ -247,7 +247,7 @@ if __name__ == '__main__':
                 stack_name = filepath_time_averaged.stem   # sollte das gleiche sein wie filestem, nur als Path
 
                 compute_volume_registration(source_stack_path=root_path / f'{stack_name}.nrrd',
-                                            target_stack_path=reference_brain_path / 'brain.nrrd',
+                                            target_stack_path=reference_brain_path / 'Elavl3-H2BRFP_z_brain.nrrd',
                                             registration_files_prefix=root_path / 'zbrain_registered' / f'{stack_name}_to_Elavl3-H2BRFP')
                 # compute_volume_registration(
                 #    source_stack_path=str(os.sep.join([root_path, f'{stack_name}.nrrd'])),
@@ -257,7 +257,7 @@ if __name__ == '__main__':
                 apply_volume_registration_to_stack(
                     registration_files_prefix_list=[root_path / 'zbrain_registered' / f'{stack_name}_to_Elavl3-H2BRFP'],
                     source_stack_path=root_path / f"{stack_name}.nrrd",
-                    target_stack_path=reference_brain_path / 'brain.nrrd',
+                    target_stack_path=reference_brain_path / 'Elavl3-H2BRFP_z_brain.nrrd',
                     output_stack_path=root_path / 'zbrain_registered' / f'{stack_name}_registered.nrrd')
 
     time_averaged_filelist.close()

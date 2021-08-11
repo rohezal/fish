@@ -9,38 +9,36 @@ import time
 
 
 # Optimally, this should be an environmental variable
-reference_brain_path = Path(".")
+reference_brain_path = Path("/Volumes/User-Data/Armin")
 
 # resolutions of the size-reduced motion aligned lightsheet stack
 dx = 0.7188675 * 2
 dy = 0.7188675 * 2
 dz = 9.9992850
 
-for folder, subfolders, files in os.walk(r'.'):
-	for file in files:
-		if re.search(r'fish.hdf5', file):  # only apply it to the caiman aligned files
+for folder, subfolders, files in os.walk(r'/Volumes/User-Data/Armin/new_registration/control/stimulus'):
+    for file in files:
+        if re.search(r'aligned.hdf5', file):  # only apply it to the caiman aligned files
 
-			filepath_aligned = Path(os.sep.join([folder, file]))
-			root_path = filepath_aligned.parent  # sollte das gleiche sein wie folder, nur als Path
-			stack_name = filepath_aligned.stem
+            filepath_aligned = Path(os.sep.join([folder, file]))
+            root_path = filepath_aligned.parent  # sollte das gleiche sein wie folder, nur als Path
+            stack_name = filepath_aligned.stem
 
-			with open(r'ANTs_List.txt', 'r') as ants_filelist:
-				text = ants_filelist.read()
+            with open(r'/Volumes/User-Data/Armin/new_registration/control/stimulus/ANTs_List.txt', 'r') as ants_filelist:
+                text = ants_filelist.read()
 
-			if re.search(stack_name, text):
-				print(f'\n{stack_name} is already registered\n')
-			else:
-				print(f'\n\nCurrently working on {stack_name}\n')
+            if re.search(stack_name, text):
+                print(f'\n{stack_name} is already registered\n')
+            else:
+                print(f'\n\nCurrently working on {stack_name}\n')
 
-				with open(r'ANTs_List.txt','a+') as ants_filelist:
-					#ants_filelist.write(f'{stack_name}\n')
-					a = 1
+                with open(r'/Volumes/User-Data/Armin/new_registration/control/stimulus/ANTs_List.txt',
+                          'a+') as ants_filelist:
+                    ants_filelist.write(f'{stack_name}\n')
 
-				f_hdf5_motion_aligned = h5py.File(filepath_aligned, 'r')  # read the caiman aligned hdf5 file
+                f_hdf5_motion_aligned = h5py.File(filepath_aligned, 'r')  # read the caiman aligned hdf5 file
 
-				t_size = f_hdf5_motion_aligned["TZYX"].shape[0]  # number of time steps in that file
-
-				print("Number of Timesteps " + str(t_size))
+                t_size = f_hdf5_motion_aligned["TZYX"].shape[0]  # number of time steps in that file
 
 				# Create a new hdf5 file with same number of time steps
 				filepath_output = Path(os.sep.join([folder, 'zbrain_registered', 'over_time', f'{stack_name}_registered.hdf5']))
@@ -77,7 +75,7 @@ for folder, subfolders, files in os.walk(r'.'):
 						registration_files_prefix_list=[root_path / 'zbrain_registered' /
 														f'{stack_name}_time_averaged_to_Elavl3-H2BRFP'],
 						source_stack_path='temp_stack.nrrd',
-						target_stack_path=reference_brain_path / 'brain.nrrd',
+						target_stack_path=reference_brain_path / 'Elavl3-H2BRFP_z_brain.nrrd.nrrd',
 						output_stack_path='temp_stack_registered.nrrd')
 
 					print("apply_volume_registration_to_stack time " + str(time.time()-start))
